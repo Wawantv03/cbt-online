@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT - SMA Negeri 2 Muara Enim</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- APP CONTAINER -->
+    <div id="app" class="flex-grow flex flex-col">
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+        <!-- LOADING SCREEN (Spinner Awal) -->
+        <div id="loading-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-yellow-500 mb-4"></div>
+            <h2 class="text-xl font-bold tracking-wider">MENGHUBUNGKAN KE SERVER CBT...</h2>
+            <p class="text-sm text-slate-400 mt-2">Menyiapkan konfigurasi sistem SMA Negeri 2 Muara Enim</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. LANDING & LOGIN PAGE -->
+        <!-- ========================================== -->
+        <div id="page-login" class="hidden flex-grow flex items-center justify-center px-4 py-12 bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-900 relative overflow-hidden">
+            <!-- Background Decorative Elements -->
+            <div class="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+
+            <div class="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl shadow-2xl relative z-10 text-white">
+                <div class="text-center mb-8">
+                    <!-- Placeholder Logo Sekolah SMAN 2 Muara Enim -->
+                    <div class="w-20 h-20 bg-yellow-500 text-slate-900 mx-auto rounded-full flex items-center justify-center font-bold text-2xl shadow-lg border-2 border-white mb-4">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight">CBT ONLINE</h1>
+                    <p class="text-yellow-400 font-semibold tracking-wide text-sm">SMA NEGERI 2 MUARA ENIM</p>
+                    <p class="text-xs text-slate-300 mt-1">Masukan No. Pendaftaran Anda</p>
+                </div>
+
+                <!-- Tab Pemilihan Login -->
+                <div class="flex rounded-lg bg-slate-800/50 p-1 mb-6 border border-white/10">
+                    <button id="tab-btn-siswa" class="flex-1 py-2 text-center text-sm font-semibold rounded-md bg-yellow-500 text-slate-900 transition-all duration-200">
+                        <i class="fa-solid fa-graduation-cap mr-2"></i>Siswa
+                    </button>
+                    <button id="tab-btn-admin" class="flex-1 py-2 text-center text-sm font-semibold rounded-md text-slate-300 hover:text-white transition-all duration-200">
+                        <i class="fa-solid fa-user-shield mr-2"></i>Admin
+                    </button>
+                </div>
+
+                <!-- FORM LOGIN SISWA -->
+                <form id="form-login-siswa" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="siswa-username" required class="w-full bg-slate-900/50 border border-slate-700 rounded-lg py-2.5 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200" placeholder="Masukkan Username">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-yellow-500/20 transform active:scale-95 transition-all duration-200 mt-2">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK UJIAN
+                    </button>
+                </form>
+
+                <!-- FORM LOGIN ADMIN -->
+                <form id="form-login-admin" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Password Administrator</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" id="admin-password" required class="w-full bg-slate-900/50 border border-slate-700 rounded-lg py-2.5 pl-10 pr-10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200" placeholder="Password: siapasaya">
+                            <button type="button" onclick="togglePasswordVisibility('admin-password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-indigo-500/20 transform active:scale-95 transition-all duration-200 mt-2">
+                        <i class="fa-solid fa-unlock-keyhole mr-2"></i>MASUK DASHBOARD
+                    </button>
+                </form>
+
+                <div class="mt-6 pt-6 border-t border-white/10 text-center text-xs text-slate-400">
+                    &copy; 2026 SMAN 2 Muara Enim. All rights reserved.
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- 2. DASHBOARD ADMIN (SIDEPANEL KIRI) -->
+        <!-- ========================================== -->
+        <div id="page-admin" class="hidden flex-grow flex flex-col md:flex-row bg-slate-100">
+            <!-- SIDEBAR KIRI -->
+            <aside class="w-full md:w-80 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 border-r border-slate-800">
+                <!-- Sidebar Header -->
+                <div class="p-6 border-b border-slate-800 flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-yellow-500 text-slate-900 rounded-lg flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-white font-bold leading-none">DASHBOARD ADMIN</h2>
+                        <span class="text-xs text-yellow-500 font-semibold tracking-wider">SMAN 2 MUARA ENIM</span>
+                    </div>
+                </div>
+
+                <!-- Navigasi Menu Samping -->
+                <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto">
+                    <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Kontrol Utama</p>
+                    <button onclick="switchAdminTab('tab-status')" class="admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold bg-indigo-600 text-white shadow-sm transition-all">
+                        <i class="fa-solid fa-gauge w-5 text-center"></i>
+                        <span>Status & Kontrol Ujian</span>
+                    </button>
+                    <button onclick="switchAdminTab('tab-tata-tertib')" class="admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-gavel w-5 text-center"></i>
+                        <span>Tata Tertib & Tampilan</span>
+                    </button>
+
+                    <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-6 mb-2">Manajemen Siswa</p>
+                    <button onclick="switchAdminTab('tab-tambah-siswa')" class="admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-user-plus w-5 text-center"></i>
+                        <span>Tambah Siswa Manual</span>
+                    </button>
+                    <button onclick="switchAdminTab('tab-impor-siswa')" class="admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-file-import w-5 text-center"></i>
+                        <span>Impor Siswa (CSV/Excel)</span>
+                    </button>
+                    <button onclick="switchAdminTab('tab-daftar-siswa')" class="admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all">
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                        <span>Reset & Kelola Siswa</span>
+                    </button>
+                </nav>
+
+                <!-- Sidebar Footer -->
+                <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+                    <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white py-2.5 rounded-lg font-bold text-sm transition-all duration-200">
+                        <i class="fa-solid fa-power-off"></i>
+                        <span>Keluar Sesi</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA FOR ADMIN -->
+            <main class="flex-grow p-6 md:p-8 overflow-y-auto max-h-screen">
+                <div class="max-w-5xl mx-auto space-y-6">
+                    
+                    <!-- ADMIN CONTENT TABS -->
+
+                    <!-- Tab 1: Status & Kontrol Ujian (Setting waktu, link, buka/tutup) -->
+                    <div id="admin-tab-status" class="admin-tab-content space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                                <i class="fa-solid fa-circle-play text-indigo-600 mr-2"></i>Status Dan Kontrol Utama Ujian
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Status Card -->
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status Gerbang Ujian</span>
+                                        <div class="flex items-center space-x-3 mt-2">
+                                            <span id="status-indicator-dot" class="w-4 h-4 rounded-full bg-red-500 animate-pulse"></span>
+                                            <span id="status-indicator-text" class="text-xl font-extrabold text-slate-900">UJIAN DITUTUP</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-2">Saat ujian ditutup, siswa tidak akan bisa login ke dalam sistem ujian.</p>
+                                    </div>
+                                    <div class="flex gap-3 mt-6">
+                                        <button onclick="setUjianStatus(true)" id="btn-buka-ujian" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-lg shadow-sm hover:shadow-emerald-500/20 transition-all flex items-center justify-center">
+                                            <i class="fa-solid fa-lock-open mr-2"></i> Buka Ujian
+                                        </button>
+                                        <button onclick="setUjianStatus(false)" id="btn-tutup-ujian" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-4 rounded-lg shadow-sm hover:shadow-red-500/20 transition-all flex items-center justify-center">
+                                            <i class="fa-solid fa-lock mr-2"></i> Tutup Ujian
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Timer & Config Card -->
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                                    <h4 class="font-bold text-slate-700 text-sm uppercase tracking-wider">Mata Pelajaran & Durasi</h4>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Mata Pelajaran</label>
+                                        <input type="text" id="setting-mapel" class="w-full border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Contoh: Matematika Wajib - Kelas XII">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Durasi Ujian (Menit)</label>
+                                        <input type="number" id="setting-durasi" min="1" class="w-full border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Contoh: 90">
+                                    </div>
+                                    <button onclick="saveUjianSettings()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-all">
+                                        Simpan Konfigurasi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Google Form Target -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                                <i class="fa-brands fa-google text-yellow-500 mr-2"></i>Sumber Soal (Google Form Link)
+                            </h3>
+                            <p class="text-sm text-slate-500 mb-4">Masukkan tautan/link Google Form yang berisi soal ujian. Link ini akan disematkan secara aman dalam frame fullscreen siswa.</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Link Google Form Soal</label>
+                                    <input type="url" id="setting-gform" class="w-full border border-slate-300 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="https://docs.google.com/forms/d/e/.../viewform?embedded=true">
+                                </div>
+                                <div class="bg-amber-50 border-l-4 border-amber-500 p-3 text-xs text-amber-800 rounded">
+                                    <i class="fa-solid fa-circle-info mr-1"></i> <strong>Tips:</strong> Gunakan link format embed (memiliki akhiran <code>/viewform?embedded=true</code>) agar tampilan form di layar siswa rapi dan responsif.
+                                </div>
+                                <button onclick="saveGFormLink()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-all shadow-sm">
+                                    Simpan Tautan Soal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Tata Tertib & Desain Font -->
+                    <div id="admin-tab-tata-tertib" class="admin-tab-content hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Input Tata Tertib & Styling (Rich Text Editor) -->
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                                <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3">
+                                    <i class="fa-solid fa-gears text-indigo-600 mr-2"></i>Pengaturan Tata Tertib & Tampilan
+                                </h3>
+                                
+                                <div class="space-y-1">
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Konten Tata Tertib</label>
+                                    
+                                    <!-- Rich Text Editor Wrapper -->
+                                    <div class="border border-slate-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
+                                        <!-- WYSIWYG Toolbar -->
+                                        <div class="bg-slate-50 border-b border-slate-200 p-2 flex flex-wrap gap-1.5 items-center">
+                                            <button type="button" onclick="executeEditorCommand('bold')" class="p-1.5 px-2.5 rounded bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs" title="Tebal (Bold)">
+                                                <i class="fa-solid fa-bold"></i>
+                                            </button>
+                                            <button type="button" onclick="executeEditorCommand('italic')" class="p-1.5 px-2.5 rounded bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 italic text-xs" title="Miring (Italic)">
+                                                <i class="fa-solid fa-italic"></i>
+                                            </button>
+                                            <button type="button" onclick="executeEditorCommand('underline')" class="p-1.5 px-2.5 rounded bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 underline text-xs" title="Garis Bawah (Underline)">
+                                                <i class="fa-solid fa-underline"></i>
+                                            </button>
+                                            
+                                            <span class="h-5 w-[1px] bg-slate-300 mx-1"></span>
+
+                                            <!-- Warna Teks (Khusus Seleksi) -->
+                                            <div class="flex items-center space-x-1">
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Warna:</span>
+                                                <input type="color" id="editor-font-color" onchange="executeEditorCommand('foreColor', this.value)" class="w-6 h-6 rounded border border-slate-300 cursor-pointer p-0 bg-transparent" title="Warna Teks Terseleksi">
+                                            </div>
+
+                                            <span class="h-5 w-[1px] bg-slate-300 mx-1"></span>
+
+                                            <!-- Ukuran Font (Khusus Seleksi) -->
+                                            <div class="flex items-center space-x-1">
+                                                <span class="text-[10px] font-bold text-slate-500 uppercase">Ukuran:</span>
+                                                <select onchange="changeSelectionFontSize(this.value); this.selectedIndex=0;" class="border border-slate-300 rounded p-0.5 text-xs bg-white text-slate-700 focus:outline-none">
+                                                    <option value="">Pilih...</option>
+                                                    <option value="12px">Kecil (12px)</option>
+                                                    <option value="16px">Sedang (16px)</option>
+                                                    <option value="20px">Besar (20px)</option>
+                                                    <option value="28px">Sangat Besar (28px)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Editable Content Area -->
+                                        <div id="setting-tata-tertib" contenteditable="true" class="w-full p-4 text-slate-800 min-h-[250px] max-h-[400px] bg-white overflow-y-auto focus:outline-none text-base" placeholder="Tuliskan aturan ujian di sini..."></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 italic mt-1">*Blok/seleksi teks terlebih dahulu untuk mengubah ukuran dan warna font secara spesifik.</p>
+                                </div>
+
+                                <button onclick="saveTataTertib()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-lg text-sm shadow transition-all">
+                                    Simpan Tata Tertib & Desain Tampilan
+                                </button>
+                            </div>
+
+                            <!-- Preview Tata Tertib -->
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
+                                <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                                    <i class="fa-solid fa-magnifying-glass text-indigo-600 mr-2"></i>Preview Real-time Tata Tertib
+                                </h3>
+                                <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl flex-grow overflow-y-auto max-h-[350px]">
+                                    <div id="preview-box" class="prose max-w-none text-slate-800">
+                                        <!-- Live preview content loaded by JS -->
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-circle-info"></i> Ini adalah visualisasi persis yang akan dilihat siswa sebelum masuk ke layar soal.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Tambah Siswa Manual -->
+                    <div id="admin-tab-tambah-siswa" class="admin-tab-content hidden">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                                <i class="fa-solid fa-user-plus text-indigo-600 mr-2"></i>Tambah Siswa Secara Manual
+                            </h3>
+                            <form id="form-tambah-siswa-manual" class="space-y-4 max-w-lg">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Lengkap Siswa</label>
+                                    <input type="text" id="siswa-nama-manual" required class="w-full border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Masukkan nama siswa...">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Username</label>
+                                        <input type="text" id="siswa-username-manual" required class="w-full border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Username login...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+                                        <input type="text" id="siswa-password-manual" required class="w-full border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Password login...">
+                                    </div>
+                                </div>
+                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-all shadow-sm">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Data Siswa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Impor Siswa Excel (CSV Template) -->
+                    <div id="admin-tab-impor-siswa" class="admin-tab-content hidden space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                                <i class="fa-solid fa-file-import text-indigo-600 mr-2"></i>Impor Data Siswa Melalui File CSV
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Instructions -->
+                                <div class="space-y-4 text-sm text-slate-600">
+                                    <p>Anda dapat mengimpor banyak data siswa sekaligus menggunakan format standar CSV (Comma Separated Values) yang kompatibel dengan Microsoft Excel.</p>
+                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                        <h4 class="font-bold text-slate-800 mb-2">Panduan Pengisian:</h4>
+                                        <ul class="list-decimal pl-5 space-y-1.5 text-xs">
+                                            <li>Unduh file template di samping kanan.</li>
+                                            <li>Buka file di Microsoft Excel, Google Sheets, atau text editor lainnya.</li>
+                                            <li>Isi kolom <strong>nama, username, password</strong> dengan benar.</li>
+                                            <li>Simpan kembali dalam format <strong>CSV (Comma Delimited)</strong>.</li>
+                                            <li>Pilih dan upload file tersebut pada formulir di bawah.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Template Download & File Upload -->
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm mb-3">Unduh Template Excel / CSV</h4>
+                                        <button onclick="downloadCSVTemplate()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-2 px-4 rounded-lg text-sm transition-all flex items-center justify-center shadow-sm">
+                                            <i class="fa-solid fa-file-arrow-down mr-2"></i> Download Template CSV
+                                        </button>
+                                        <p class="text-[11px] text-slate-500 mt-2 text-center">Simpan dengan ekstensi file .csv</p>
+                                    </div>
+                                    <div class="mt-6 pt-6 border-t border-slate-200">
+                                        <h4 class="font-bold text-slate-800 text-sm mb-3">Pilih File CSV Untuk Diunggah</h4>
+                                        <input type="file" id="impor-csv-file" accept=".csv" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                                        <button onclick="processCSVImport()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-lg text-sm transition-all mt-4 flex items-center justify-center shadow-sm">
+                                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Proses Impor Data
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 5: Kelola Siswa (Reset status login & hapus) -->
+                    <div id="admin-tab-daftar-siswa" class="admin-tab-content hidden">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 mb-4 gap-2">
+                                <h3 class="text-lg font-bold text-slate-800">
+                                    <i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Kelola Siswa Terdaftar
+                                </h3>
+                                <div class="flex gap-2">
+                                    <button onclick="resetAllSiswaLogins()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-1.5 px-3 rounded-lg text-xs transition-all shadow-sm">
+                                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Reset Semua Login Siswa
+                                    </button>
+                                    <button onclick="deleteAllSiswa()" class="bg-red-600/10 hover:bg-red-600 text-red-600 hover:text-white font-bold py-1.5 px-3 rounded-lg text-xs transition-all">
+                                        <i class="fa-solid fa-trash-can mr-1"></i> Hapus Semua Siswa
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Search bar -->
+                            <div class="relative mb-4">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" id="siswa-search" oninput="renderSiswaTable()" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800" placeholder="Cari nama atau username siswa...">
+                            </div>
+
+                            <!-- Table -->
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table class="w-full text-left text-sm border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 font-semibold text-xs uppercase tracking-wider">
+                                            <th class="py-3 px-4">Nama Siswa</th>
+                                            <th class="py-3 px-4">Username</th>
+                                            <th class="py-3 px-4">Password</th>
+                                            <th class="py-3 px-4 text-center">Status Login</th>
+                                            <th class="py-3 px-4 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-siswa-body" class="divide-y divide-slate-100 text-slate-700">
+                                        <!-- Terisi oleh JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- 3. HALAMAN TATA TERTIB SISWA SEBELUM UJIAN -->
+        <!-- ========================================== -->
+        <div id="page-tata-tertib" class="hidden flex-grow flex items-center justify-center p-4 bg-slate-100">
+            <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-slate-900 text-white p-6 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-yellow-500 text-slate-900 rounded-lg flex items-center justify-center font-bold text-xl">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold leading-none" id="welcome-siswa-nama">NAMA SISWA</h2>
+                            <span class="text-xs text-yellow-500 font-semibold tracking-wider">PESERTA UJIAN CBT</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-xs text-slate-400 font-semibold uppercase tracking-wider">Mata Pelajaran</span>
+                        <span id="welcome-mapel" class="text-sm font-bold text-yellow-400">Matapelajaran</span>
+                    </div>
+                </div>
+
+                <!-- Konten Aturan -->
+                <div class="p-6 md:p-8 space-y-6">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gavel text-amber-500 mr-2"></i>Tata Tertib Pengerjaan Ujian</h3>
+                        <p class="text-xs text-slate-500">Mohon membaca seluruh aturan dengan saksama sebelum memulai.</p>
+                    </div>
+
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="text-sm font-bold text-amber-900">PENTING: Proteksi Fullscreen Aktif!</h4>
+                                <p class="text-xs text-amber-700 mt-1 leading-relaxed">
+                                    Ujian akan berjalan dalam mode layar penuh (fullscreen). Anda <strong>DILARANG KERAS</strong> keluar dari fullscreen, berpindah tab browser, atau membuka aplikasi lain. Setiap pelanggaran akan dicatat oleh sistem dan dapat mengakibatkan ujian terkunci otomatis.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tata-tertib-konten-siswa" class="prose max-w-none text-slate-800 leading-relaxed max-h-[250px] overflow-y-auto p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <!-- Dimuat secara dinamis dengan style warna/font yang diatur admin -->
+                    </div>
+
+                    <!-- Tombol Mulai Ujian -->
+                    <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-sm text-slate-600">
+                            Durasi Pengerjaan: <strong id="welcome-durasi" class="text-slate-900">0</strong> Menit
+                        </div>
+                        <button onclick="startExamFullScreen()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 px-8 rounded-xl shadow-lg hover:shadow-emerald-600/20 transform active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-play"></i> MULAI UJIAN SEKARANG
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- 4. HALAMAN SOAL / EXAM INTERFACE (CBT) -->
+        <!-- ========================================== -->
+        <div id="page-exam" class="hidden flex-grow flex flex-col bg-slate-950 text-slate-100 h-screen select-none relative">
+            <!-- Header CBT -->
+            <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between flex-shrink-0 z-20 shadow-md">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 bg-yellow-500 text-slate-900 rounded-lg flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 id="exam-siswa-nama" class="font-bold text-sm text-white leading-tight">Nama Siswa</h2>
+                        <p id="exam-mapel" class="text-xs text-yellow-500 font-semibold tracking-wider">MATA PELAJARAN</p>
+                    </div>
+                </div>
+
+                <!-- Timer / Sisa Waktu -->
+                <div class="flex items-center space-x-3 bg-slate-950 border border-slate-800 rounded-full px-4 py-2 shadow-inner">
+                    <i class="fa-solid fa-clock text-amber-500 animate-pulse-slow"></i>
+                    <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Sisa Waktu:</span>
+                    <span id="exam-countdown" class="text-base font-black text-amber-400 font-mono tracking-widest">00:00:00</span>
+                </div>
+
+                <!-- Tombol Selesai Ujian - MERAH -->
+                <div>
+                    <button onclick="confirmSubmitExam()" class="bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-extrabold text-sm py-2 px-6 rounded-lg shadow-lg hover:shadow-red-600/30 transform active:scale-95 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> SELESAI UJIAN
+                    </button>
+                </div>
+            </header>
+
+            <!-- SOAL EMBED AREA -->
+            <div class="flex-grow bg-slate-900 relative">
+                <!-- Watermark Anti Tab-Switching -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 select-none z-10">
+                    <div class="text-center">
+                        <span class="block text-4xl font-extrabold text-white tracking-widest">SMAN 2 MUARA ENIM</span>
+                        <span class="block text-xl text-white mt-2">PROTEKSI UJIAN CBT SEKURITI TINGGI</span>
+                    </div>
+                </div>
+
+                <iframe id="exam-iframe" class="w-full h-full relative z-20 border-none bg-white" src="" allow="autoplay"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. DIALOGS & MODALS (POPUP) -->
+    <!-- ========================================== -->
+
+    <!-- Modal Konfirmasi Selesai Ujian -->
+    <div id="modal-selesai" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 text-slate-800 border border-slate-100 transform scale-95 transition-transform duration-300">
+            <div class="text-center space-y-4">
+                <div class="w-16 h-16 bg-red-100 text-red-600 mx-auto rounded-full flex items-center justify-center text-3xl">
+                    <i class="fa-solid fa-circle-question animate-bounce"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Selesaikan Ujian Sekarang?</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">Pastikan Anda telah mengisi semua jawaban di Google Form sebelum mengklik tombol selesai. Setelah selesai, Anda tidak dapat kembali ke ruang ujian.</p>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('modal-selesai')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl text-sm transition-all">
+                    Lanjutkan Ujian
+                </button>
+                <button onclick="submitExamFinal()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-extrabold py-3 px-4 rounded-xl text-sm shadow-lg hover:shadow-red-600/20 transition-all">
+                    Selesai & Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Peringatan Fullscreen (Melanggar Aturan) -->
+    <div id="modal-warning" class="hidden fixed inset-0 bg-red-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 text-slate-800 border-4 border-red-500">
+            <div class="text-center space-y-4">
+                <div class="w-16 h-16 bg-red-100 text-red-600 mx-auto rounded-full flex items-center justify-center text-3xl animate-pulse">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-2xl font-black text-red-600">PERINGATAN KERAS!</h3>
+                <p class="text-sm text-slate-700 leading-relaxed">
+                    Anda terdeteksi mencoba keluar dari mode ujian layar penuh (Fullscreen) atau berpindah jendela/tab!
+                </p>
+                <div class="bg-red-50 p-3 rounded-lg text-xs text-red-800 font-semibold">
+                    Kesempatan Toleransi Tersisa: <span id="warning-count-text" class="text-base font-bold text-red-600">3</span> Kali
+                </div>
+                <p class="text-[11px] text-slate-500 leading-normal">
+                    Jika toleransi habis, sistem akan mengunci sesi pengerjaan ujian Anda secara permanen. Klik tombol di bawah untuk kembali ke mode fullscreen.
+                </p>
+            </div>
+            <div class="mt-6">
+                <button onclick="recoverFullScreen()" class="w-full bg-red-600 hover:bg-red-500 text-white font-extrabold py-3.5 px-4 rounded-xl text-sm shadow-lg hover:shadow-red-500/20 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-expand"></i> KEMBALI FULLSCREEN & LANJUTKAN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Terkunci (Toleransi Habis / Selesai Sesi) -->
+    <div id="modal-locked" class="hidden fixed inset-0 bg-slate-950/98 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 text-slate-800 text-center">
+            <div class="w-20 h-20 bg-red-100 text-red-600 mx-auto rounded-full flex items-center justify-center text-4xl mb-4">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900" id="locked-title">UJIAN TERKUNCI!</h3>
+            <p class="text-sm text-slate-500 mt-2 leading-relaxed" id="locked-description">
+                Anda telah melanggar tata tertib dengan berulang kali keluar dari mode ujian layar penuh. Sesi ujian Anda telah dinonaktifkan.
+            </p>
+            <div class="bg-slate-100 p-4 rounded-xl mt-4 text-xs space-y-1">
+                <p>Silakan hubungi Pengawas Ruang atau Admin CBT Sekolah untuk melakukan <strong>reset login siswa</strong> agar dapat melanjutkan ujian.</p>
+            </div>
+            <button onclick="logout()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl text-sm mt-6 transition-all">
+                Kembali Ke Halaman Utama
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 6. FIREBASE & CORE APPLICATION SCRIPTS -->
+    <!-- ========================================== -->
+    <!-- Firebase App & Services -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by Canvas environment or fallback
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sman2-muaraenim-cbt';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "",
+                authDomain: "cbt-sman2me.firebaseapp.com",
+                projectId: "cbt-sman2me",
+                storageBucket: "cbt-sman2me.appspot.com",
+                messagingSenderId: "12345678",
+                appId: "1:1234:web:1234"
+              };
+
+        // Initialize Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
+        const auth = getAuth(firebaseApp);
+        const db = getFirestore(firebaseApp);
+
+        // Core App States
+        let currentUser = null;
+        let authRole = null; // 'siswa' or 'admin'
+        let systemSettings = {};
+        let allSiswaList = [];
+        let activeSiswaData = null; // Data detail siswa jika login
+        let warningCount = 0;
+        let warningLimit = 3;
+        let examTimer = null;
+        let durationLeft = 0; // dalam detik
+        let currentTabAdmin = 'tab-status';
+
+        // Rich Text Selection State Preservers to prevent losing focus when selecting colors/font sizes
+        let savedRange = null;
+
+        function saveSelection() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const editor = document.getElementById('setting-tata-tertib');
+                if (editor && editor.contains(range.commonAncestorContainer)) {
+                    savedRange = range;
+                }
+            }
+        }
+
+        function restoreSelection() {
+            if (savedRange) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(savedRange);
+            }
+        }
+
+        // Paths in Firestore (Following Strict Rule 1)
+        const getPublicRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
+        const getPublicDocRef = (colName, docId) => doc(db, 'artifacts', appId, 'public', 'data', colName, docId);
+
+        // ==========================================
+        // MAIN LIFECYCLE
+        // ==========================================
+        window.addEventListener('load', async () => {
+            try {
+                // Auth Rule 3: Authenticate FIRST
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, async (user) => {
+                    currentUser = user;
+                    if (user) {
+                        // Jalankan inisialisasi system & pendengar database
+                        initSystemSettings();
+                        initSiswaListener();
+                        hideLoading();
+                        showPage('login');
+                    } else {
+                        showToast('Gagal terhubung dengan otentikasi Firebase', 'error');
+                    }
+                });
+            } catch (err) {
+                console.error("Firebase Init Error:", err);
+                showToast('Koneksi Firebase gagal. Gunakan database luring lokal sementara.', 'warning');
+                hideLoading();
+                showPage('login');
+            }
+
+            // Hubungkan editor input ke pembaruan live preview secara instan
+            const editorEl = document.getElementById('setting-tata-tertib');
+            if (editorEl) {
+                // Simpan range seleksi saat user mengklik, fokus, atau mengetik di editor
+                editorEl.addEventListener('mouseup', saveSelection);
+                editorEl.addEventListener('keyup', saveSelection);
+                editorEl.addEventListener('focus', saveSelection);
+
+                editorEl.addEventListener('input', () => {
+                    saveSelection();
+                    updateLivePreview(editorEl.innerHTML);
+                });
+            }
+        });
+
+        // Hide Loader
+        function hideLoading() {
+            document.getElementById('loading-screen').classList.add('hidden');
+        }
+
+        // ==========================================
+        // FIRESTORE SYNCING & INITIALIZATIONS
+        // ==========================================
+        
+        // Mengamati & Mengambil settingan konfigurasi umum ujian
+        function initSystemSettings() {
+            const configDocRef = getPublicDocRef('settings', 'global_config');
+            
+            onSnapshot(configDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    systemSettings = docSnap.data();
+                } else {
+                    // Seed initial data jika kosong
+                    systemSettings = {
+                        isOpen: false,
+                        mapel: "Ujian Akhir Semester SMA N 2",
+                        durasi: 90,
+                        gformUrl: "",
+                        tataTertib: "<p>1. Kerjakan ujian dengan jujur dan mandiri.</p><p>2. Dilarang berbuat curang atau menyontek dalam bentuk apapun.</p><p>3. Dilarang keras keluar dari layar penuh (Fullscreen) saat ujian berlangsung.</p><p>4. Segala tindakan mencurigakan akan dicatat otomatis oleh sistem.</p>"
+                    };
+                    setDoc(configDocRef, systemSettings);
+                }
+                updateAdminConfigUI();
+                updateSiswaPreviewUI();
+            }, (err) => {
+                console.error("Gagal membaca settings:", err);
+            });
+        }
+
+        // Mengamati daftar siswa secara real-time (Rule 2: No complex queries, fetch all then filter)
+        function initSiswaListener() {
+            const siswaCollection = getPublicRef('siswa');
+            onSnapshot(siswaCollection, (snapshot) => {
+                allSiswaList = [];
+                snapshot.forEach((doc) => {
+                    allSiswaList.push({ id: doc.id, ...doc.data() });
+                });
+                renderSiswaTable();
+            }, (err) => {
+                console.error("Gagal membaca daftar siswa:", err);
+            });
+        }
+
+        // ==========================================
+        // UI SYNC & RENDERERS
+        // ==========================================
+        
+        // Memperbarui UI di Dashboard Admin berdasarkan settings terakhir
+        function updateAdminConfigUI() {
+            // Indikator status ujian buka/tutup
+            const dot = document.getElementById('status-indicator-dot');
+            const text = document.getElementById('status-indicator-text');
+            const btnBuka = document.getElementById('btn-buka-ujian');
+            const btnTutup = document.getElementById('btn-tutup-ujian');
+
+            if (systemSettings.isOpen) {
+                dot.className = "w-4 h-4 rounded-full bg-emerald-500 animate-pulse";
+                text.innerText = "UJIAN DIBUKA (AKTIF)";
+                text.className = "text-xl font-extrabold text-emerald-600";
+                btnBuka.disabled = true;
+                btnBuka.classList.add('opacity-50', 'cursor-not-allowed');
+                btnTutup.disabled = false;
+                btnTutup.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                dot.className = "w-4 h-4 rounded-full bg-red-500 animate-pulse";
+                text.innerText = "UJIAN DITUTUP (INAKTIF)";
+                text.className = "text-xl font-extrabold text-red-600";
+                btnBuka.disabled = false;
+                btnBuka.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnTutup.disabled = true;
+                btnTutup.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            // Input fields
+            document.getElementById('setting-mapel').value = systemSettings.mapel || "";
+            document.getElementById('setting-durasi').value = systemSettings.durasi || 90;
+            document.getElementById('setting-gform').value = systemSettings.gformUrl || "";
+            
+            // Rich Text Editor HTML
+            const editor = document.getElementById('setting-tata-tertib');
+            if (editor && editor.innerHTML !== systemSettings.tataTertib) {
+                editor.innerHTML = systemSettings.tataTertib || "";
+            }
+
+            // Live preview
+            updateLivePreview(systemSettings.tataTertib || "");
+        }
+
+        // Fungsi pembantu memperbarui preview admin secara dinamis
+        function updateLivePreview(htmlContent) {
+            const preview = document.getElementById('preview-box');
+            if (preview) {
+                preview.innerHTML = htmlContent;
+            }
+        }
+
+        // Update preview tata tertib di layar siswa
+        function updateSiswaPreviewUI() {
+            const container = document.getElementById('tata-tertib-konten-siswa');
+            if (container) {
+                container.innerHTML = systemSettings.tataTertib || "";
+            }
+        }
+
+        // Render tabel kelola siswa + pencarian lokal (Rule 2 Compliance)
+        function renderSiswaTable() {
+            const tbody = document.getElementById('table-siswa-body');
+            const searchKeyword = document.getElementById('siswa-search').value.toLowerCase();
+            tbody.innerHTML = "";
+
+            const filtered = allSiswaList.filter(s => 
+                s.nama.toLowerCase().includes(searchKeyword) || 
+                s.username.toLowerCase().includes(searchKeyword)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-400 font-medium">
+                            <i class="fa-solid fa-users-slash text-2xl block mb-2 text-slate-300"></i>
+                            Tidak ada data siswa ditemukan
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(siswa => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition-colors";
+
+                const isOnline = siswa.isLoggedIn ? true : false;
+                const statusBadge = isOnline 
+                    ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 animate-pulse"></span>Sedang Aktif</span>`
+                    : `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Ready (Kosong)</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-slate-900">${escapeHtml(siswa.nama)}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-600">${escapeHtml(siswa.username)}</td>
+                    <td class="py-3 px-4 font-mono text-slate-500">${escapeHtml(siswa.password)}</td>
+                    <td class="py-3 px-4 text-center">${statusBadge}</td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="resetSiswaLogin('${siswa.id}')" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-xs font-bold transition-all" title="Reset Sesi Login">
+                                <i class="fa-solid fa-arrows-rotate mr-1"></i> Reset
+                            </button>
+                            <button onclick="deleteSiswa('${siswa.id}')" class="p-1.5 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg text-xs font-bold transition-all" title="Hapus Siswa">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+
+        // ==========================================
+        // WYSIWYG EDITOR ACTIONS
+        // ==========================================
+
+        // Fungsi menjalankan command editor bold, italic, underline, warna teks dll
+        window.executeEditorCommand = function(command, value = null) {
+            restoreSelection();
+            document.execCommand(command, false, value);
+            saveSelection();
+            const editor = document.getElementById('setting-tata-tertib');
+            if (editor) {
+                updateLivePreview(editor.innerHTML);
+            }
+        }
+
+        // Fungsi mengubah ukuran font hanya pada bagian teks yang diblok
+        window.changeSelectionFontSize = function(size) {
+            if (!size) return;
+            
+            restoreSelection();
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            
+            const range = selection.getRangeAt(0);
+            const selectedText = range.toString();
+            
+            if (selectedText.trim() === "") {
+                showToast("Silakan blok teks yang ingin diubah ukuran font-nya!", "warning");
+                return;
+            }
+
+            // Buat elemen span penampung style custom font-size
+            const span = document.createElement("span");
+            span.style.fontSize = size;
+            span.textContent = selectedText;
+
+            // Hapus isi teks lama yang diblok dan gantikan dengan span baru bermodel style
+            range.deleteContents();
+            range.insertNode(span);
+
+            saveSelection();
+
+            // Sync ulang ke preview area
+            const editor = document.getElementById('setting-tata-tertib');
+            if (editor) {
+                updateLivePreview(editor.innerHTML);
+            }
+        }
+
+
+        // ==========================================
+        // AUTHENTICATION & LOGIN LOGIC
+        // ==========================================
+        
+        // Toggle view password
+        window.togglePasswordVisibility = function(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icon.className = "fa-solid fa-eye";
+            }
+        }
+
+        // Tab Handler Login Form
+        document.getElementById('tab-btn-siswa').addEventListener('click', () => {
+            setLoginTab('siswa');
+        });
+        document.getElementById('tab-btn-admin').addEventListener('click', () => {
+            setLoginTab('admin');
+        });
+
+        function setLoginTab(role) {
+            const btnSiswa = document.getElementById('tab-btn-siswa');
+            const btnAdmin = document.getElementById('tab-btn-admin');
+            const formSiswa = document.getElementById('form-login-siswa');
+            const formAdmin = document.getElementById('form-login-admin');
+
+            if (role === 'siswa') {
+                btnSiswa.className = "flex-1 py-2 text-center text-sm font-semibold rounded-md bg-yellow-500 text-slate-900 transition-all";
+                btnAdmin.className = "flex-1 py-2 text-center text-sm font-semibold rounded-md text-slate-300 hover:text-white transition-all";
+                formSiswa.classList.remove('hidden');
+                formAdmin.classList.add('hidden');
+            } else {
+                btnAdmin.className = "flex-1 py-2 text-center text-sm font-semibold rounded-md bg-indigo-600 text-white transition-all";
+                btnSiswa.className = "flex-1 py-2 text-center text-sm font-semibold rounded-md text-slate-300 hover:text-white transition-all";
+                formAdmin.classList.remove('hidden');
+                formSiswa.classList.add('hidden');
+            }
+        }
+
+        // Handler Login Admin
+        document.getElementById('form-login-admin').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            if (password === "siapasaya") {
+                authRole = "admin";
+                showToast('Login berhasil sebagai Administrator', 'success');
+                showPage('admin');
+                switchAdminTab('tab-status');
+                document.getElementById('admin-password').value = ""; // clear
+            } else {
+                showToast('Password administrator salah!', 'error');
+            }
+        });
+
+        // Handler Login Siswa (Cek Firestore Data - Hanya menggunakan Username)
+        document.getElementById('form-login-siswa').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const usernameInput = document.getElementById('siswa-username').value.trim();
+
+            if (!systemSettings.isOpen) {
+                showToast('Maaf, Ujian sedang ditutup oleh Administrator!', 'error');
+                return;
+            }
+
+            // Cari siswa di allSiswaList (Local memory filter - Rule 2 compliant)
+            const targetSiswa = allSiswaList.find(s => s.username === usernameInput);
+
+            if (!targetSiswa) {
+                showToast('Username tidak terdaftar!', 'error');
+                return;
+            }
+
+            // Cek apakah siswa sedang login / status login aktif
+            if (targetSiswa.isLoggedIn) {
+                showToast('Siswa ini sedang login di perangkat lain atau sesi belum di-reset admin!', 'error');
+                return;
+            }
+
+            // Sukses Login
+            try {
+                // Tandai login di Firestore
+                const siswaDocRef = getPublicDocRef('siswa', targetSiswa.id);
+                await updateDoc(siswaDocRef, { isLoggedIn: true });
+                
+                activeSiswaData = targetSiswa;
+                authRole = "siswa";
+                
+                // Set data tampilan sambutan siswa
+                document.getElementById('welcome-siswa-nama').innerText = targetSiswa.nama;
+                document.getElementById('welcome-mapel').innerText = systemSettings.mapel;
+                document.getElementById('welcome-durasi').innerText = systemSettings.durasi;
+                
+                showToast(`Selamat datang, ${targetSiswa.nama}!`, 'success');
+                showPage('tata-tertib');
+
+                // Clear input form
+                document.getElementById('siswa-username').value = "";
+            } catch (err) {
+                console.error(err);
+                showToast('Gagal memproses otorisasi masuk siswa. Hubungi admin.', 'error');
+            }
+        });
+
+        // ==========================================
+        // ADMIN ACTIONS & MENUS
+        // ==========================================
+        
+        // Switch tab menu samping kiri admin
+        window.switchAdminTab = function(tabId) {
+            currentTabAdmin = tabId;
+            // hide all content tabs
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            // show targeted
+            document.getElementById(`admin-${tabId}`).classList.remove('hidden');
+
+            // update nav styling
+            const navButtons = document.querySelectorAll('.admin-nav-btn');
+            navButtons.forEach(btn => {
+                btn.className = "admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all text-slate-300";
+            });
+
+            // Target button active
+            event.currentTarget.className = "admin-nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold bg-indigo-600 text-white shadow-sm transition-all";
+        }
+
+        // Buka / Tutup Ujian
+        window.setUjianStatus = async function(isOpenStatus) {
+            try {
+                const configDocRef = getPublicDocRef('settings', 'global_config');
+                await updateDoc(configDocRef, { isOpen: isOpenStatus });
+                showToast(`Gerbang Ujian berhasil ${isOpenStatus ? 'DIBUKA' : 'DITUTUP'}`, 'success');
+            } catch (err) {
+                showToast('Gagal mengubah status ujian', 'error');
+            }
+        }
+
+        // Simpan Konfigurasi Mapel & Durasi
+        window.saveUjianSettings = async function() {
+            const mapel = document.getElementById('setting-mapel').value.trim();
+            const durasi = parseInt(document.getElementById('setting-durasi').value);
+
+            if (!mapel || isNaN(durasi) || durasi <= 0) {
+                showToast('Mohon isi Mata Pelajaran dan Durasi dengan benar!', 'warning');
+                return;
+            }
+
+            try {
+                const configDocRef = getPublicDocRef('settings', 'global_config');
+                await updateDoc(configDocRef, { mapel, durasi });
+                showToast('Konfigurasi mapel & durasi berhasil disimpan', 'success');
+            } catch (err) {
+                showToast('Gagal menyimpan konfigurasi', 'error');
+            }
+        }
+
+        // Simpan Tautan Google Form Soal
+        window.saveGFormLink = async function() {
+            let url = document.getElementById('setting-gform').value.trim();
+            if (!url) {
+                showToast('Masukkan URL Google Form terlebih dahulu', 'warning');
+                return;
+            }
+
+            // Sedikit tweak agar mengarah ke format viewform embedded yang rapi jika bukan embed
+            if (url.includes("docs.google.com/forms") && !url.includes("embedded=true")) {
+                if (url.includes("?")) {
+                    url += "&embedded=true";
+                } else {
+                    url += "?embedded=true";
+                }
+            }
+
+            try {
+                const configDocRef = getPublicDocRef('settings', 'global_config');
+                await updateDoc(configDocRef, { gformUrl: url });
+                showToast('Tautan Google Form sumber soal berhasil disimpan!', 'success');
+            } catch (err) {
+                showToast('Gagal menyimpan tautan Google Form', 'error');
+            }
+        }
+
+        // Simpan Tata Tertib & Styling
+        window.saveTataTertib = async function() {
+            const editor = document.getElementById('setting-tata-tertib');
+            const tataTertibHTML = editor ? editor.innerHTML : "";
+
+            try {
+                const configDocRef = getPublicDocRef('settings', 'global_config');
+                await updateDoc(configDocRef, { tataTertib: tataTertibHTML });
+                showToast('Tata tertib & tampilan visual berhasil disimpan!', 'success');
+            } catch (err) {
+                showToast('Gagal menyimpan tata tertib', 'error');
+            }
+        }
+
+        // Tambah Siswa Manual
+        document.getElementById('form-tambah-siswa-manual').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nama = document.getElementById('siswa-nama-manual').value.trim();
+            const username = document.getElementById('siswa-username-manual').value.trim();
+            const password = document.getElementById('siswa-password-manual').value;
+
+            // Validasi duplikasi username
+            if (allSiswaList.some(s => s.username === username)) {
+                showToast('Username sudah terpakai oleh siswa lain!', 'warning');
+                return;
+            }
+
+            try {
+                const newId = crypto.randomUUID();
+                const sDocRef = getPublicDocRef('siswa', newId);
+                await setDoc(sDocRef, {
+                    nama,
+                    username,
+                    password,
+                    isLoggedIn: false
+                });
+
+                showToast(`Berhasil menambahkan siswa: ${nama}`, 'success');
+                // Clear input
+                document.getElementById('siswa-nama-manual').value = "";
+                document.getElementById('siswa-username-manual').value = "";
+                document.getElementById('siswa-password-manual').value = "";
+            } catch (err) {
+                showToast('Gagal menambahkan data siswa', 'error');
+            }
+        });
+
+        // Template CSV Download
+        window.downloadCSVTemplate = function() {
+            const csvContent = "data:text/csv;charset=utf-8,nama,username,password\nAdi Pratama,adi123,adi123\nSiti Rahma,siti123,siti123";
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "template_siswa_cbt.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Template CSV berhasil diunduh!', 'success');
+        }
+
+        // Impor Siswa Melalui CSV
+        window.processCSVImport = function() {
+            const fileInput = document.getElementById('impor-csv-file');
+            if (fileInput.files.length === 0) {
+                showToast('Pilih file CSV terlebih dahulu!', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const rows = text.split("\n");
+                
+                // Cari header
+                const headers = rows[0].split(",").map(h => h.trim().toLowerCase());
+                const namaIdx = headers.indexOf("nama");
+                const userIdx = headers.indexOf("username");
+                const passIdx = headers.indexOf("password");
+
+                if (namaIdx === -1 || userIdx === -1 || passIdx === -1) {
+                    showToast('Format header CSV tidak valid. Harus mengandung "nama", "username", "password"', 'error');
+                    return;
+                }
+
+                let importedCount = 0;
+                let skipCount = 0;
+
+                // Batches untuk Firestore untuk efisiensi
+                const batch = writeBatch(db);
+
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i].split(",");
+                    if (row.length < 3) continue;
+
+                    const nama = row[namaIdx]?.trim();
+                    const username = row[userIdx]?.trim();
+                    const password = row[passIdx]?.trim();
+
+                    if (!nama || !username || !password) continue;
+
+                    // Lewati jika duplikat di list saat ini
+                    if (allSiswaList.some(s => s.username === username)) {
+                        skipCount++;
+                        continue;
+                    }
+
+                    const newId = crypto.randomUUID();
+                    const sDocRef = getPublicDocRef('siswa', newId);
+                    batch.set(sDocRef, {
+                        nama,
+                        username,
+                        password,
+                        isLoggedIn: false
+                    });
+                    importedCount++;
+                }
+
+                if (importedCount > 0) {
+                    await batch.commit();
+                    showToast(`Selesai mengimpor! ${importedCount} siswa berhasil ditambahkan. ${skipCount > 0 ? skipCount + ' siswa dilewati karena username duplikat.' : ''}`, 'success');
+                } else {
+                    showToast('Tidak ada siswa baru yang berhasil diimpor.', 'warning');
+                }
+
+                fileInput.value = ""; // Reset file input
+            }
+
+            reader.readAsText(file);
+        }
+
+        // Reset Sesi Login Siswa (Satu Orang)
+        window.resetSiswaLogin = async function(siswaId) {
+            try {
+                const sDocRef = getPublicDocRef('siswa', siswaId);
+                await updateDoc(sDocRef, { isLoggedIn: false });
+                showToast('Status sesi login siswa berhasil di-reset', 'success');
+            } catch (err) {
+                showToast('Gagal mereset login siswa', 'error');
+            }
+        }
+
+        // Reset Semua Sesi Login Siswa sekaligus
+        window.resetAllSiswaLogins = async function() {
+            if (allSiswaList.length === 0) {
+                showToast('Tidak ada siswa untuk di-reset.', 'warning');
+                return;
+            }
+            if (!confirm('Anda yakin ingin mereset semua status login siswa?')) return;
+
+            const batch = writeBatch(db);
+            allSiswaList.forEach(siswa => {
+                const sDocRef = getPublicDocRef('siswa', siswa.id);
+                batch.update(sDocRef, { isLoggedIn: false });
+            });
+
+            await batch.commit();
+            showToast('Semua status login siswa berhasil di-reset!', 'success');
+        }
+
+        // Hapus satu siswa
+        window.deleteSiswa = async function(siswaId) {
+            if (!confirm('Hapus siswa ini dari sistem?')) return;
+            try {
+                const sDocRef = getPublicDocRef('siswa', siswaId);
+                await deleteDoc(sDocRef);
+                showToast('Siswa berhasil dihapus', 'success');
+            } catch (err) {
+                showToast('Gagal menghapus siswa', 'error');
+            }
+        }
+
+        // Hapus Semua Siswa
+        window.deleteAllSiswa = async function() {
+            if (allSiswaList.length === 0) {
+                showToast('Tidak ada siswa untuk dihapus.', 'warning');
+                return;
+            }
+            if (!confirm('PERINGATAN! Anda akan menghapus SELURUH siswa di database. Lanjutkan?')) return;
+
+            const batch = writeBatch(db);
+            allSiswaList.forEach(siswa => {
+                const sDocRef = getPublicDocRef('siswa', siswa.id);
+                batch.delete(sDocRef);
+            });
+
+            await batch.commit();
+            showToast('Seluruh data siswa berhasil dibersihkan!', 'success');
+        }
+
+
+        // ==========================================
+        // EXAM SESSION & FULLSCREEN SECURITY (SISWA)
+        // ==========================================
+        
+        // Mulai Ujian dan aktifkan Fullscreen
+        window.startExamFullScreen = function() {
+            if (!systemSettings.gformUrl) {
+                showToast('Ujian gagal dimulai: Sumber link soal Google Form belum dikonfigurasi admin!', 'error');
+                return;
+            }
+
+            const docEl = document.documentElement;
+            
+            // Masuk mode fullscreen browser secara asinkron dengan penanganan error (try-catch)
+            // agar mencegah sistem crash jika diblokir oleh Permissions Policy di iframe/browser
+            const enterFullScreen = async () => {
+                try {
+                    if (docEl.requestFullscreen) {
+                        await docEl.requestFullscreen();
+                    } else if (docEl.mozRequestFullScreen) { /* Firefox */
+                        await docEl.mozRequestFullScreen();
+                    } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        await docEl.webkitRequestFullscreen();
+                    } else if (docEl.msRequestFullscreen) { /* IE/Edge */
+                        await docEl.msRequestFullscreen();
+                    }
+                } catch (err) {
+                    console.warn("Izin fullscreen ditolak oleh kebijakan keamanan browser:", err);
+                    showToast("Layar penuh dibatasi oleh browser. Proteksi ujian tetap diaktifkan.", "warning");
+                }
+            };
+
+            enterFullScreen();
+
+            // Set state & run
+            warningCount = 0;
+            showPage('exam');
+            
+            // Set data halaman CBT
+            document.getElementById('exam-siswa-nama').innerText = activeSiswaData.nama;
+            document.getElementById('exam-mapel').innerText = systemSettings.mapel;
+            
+            // Pasang Link Iframe Soal
+            document.getElementById('exam-iframe').src = systemSettings.gformUrl;
+
+            // Aktifkan timer hitung mundur
+            startCountdownTimer(systemSettings.durasi);
+
+            // Aktifkan pendengar keamanan / anti-cheat tab-switching
+            registerSecurityListeners();
+        }
+
+        // Security Listener: Detect tab change & exit fullscreen
+        let securityListenersActive = false;
+        
+        function registerSecurityListeners() {
+            if (securityListenersActive) return;
+
+            // 1. Deteksi Perubahan Status Fullscreen
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            // 2. Deteksi Tab-Switching (Page Visibility API)
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+
+            securityListenersActive = true;
+        }
+
+        function removeSecurityListeners() {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            securityListenersActive = false;
+        }
+
+        // Handler saat keluar fullscreen
+        function handleFullscreenChange() {
+            const isFullScreenNow = document.fullscreenElement || 
+                                    document.webkitFullscreenElement || 
+                                    document.mozFullScreenElement || 
+                                    document.msFullscreenElement;
+
+            // Jika siswa keluar dari fullscreen di luar kontrol yang sah
+            if (!isFullScreenNow && authRole === 'siswa' && document.getElementById('page-exam').classList.contains('hidden') === false) {
+                triggerCheatWarning();
+            }
+        }
+
+        // Handler saat siswa berpindah tab / minimize browser
+        function handleVisibilityChange() {
+            if (document.hidden && authRole === 'siswa' && document.getElementById('page-exam').classList.contains('hidden') === false) {
+                triggerCheatWarning();
+            }
+        }
+
+        // Trigger Peringatan / Kunci Akun jika curang
+        function triggerCheatWarning() {
+            warningCount++;
+            if (warningCount >= warningLimit) {
+                // Kunci akun secara permanen di database
+                lockSiswaSession();
+            } else {
+                document.getElementById('warning-count-text').innerText = (warningLimit - warningCount);
+                showModal('modal-warning');
+            }
+        }
+
+        // Force Fullscreen ulang untuk siswa yang diperingatkan
+        window.recoverFullScreen = function() {
+            closeModal('modal-warning');
+            const docEl = document.documentElement;
+            
+            const reenterFullScreen = async () => {
+                try {
+                    if (docEl.requestFullscreen) {
+                        await docEl.requestFullscreen();
+                    } else if (docEl.webkitRequestFullscreen) {
+                        await docEl.webkitRequestFullscreen();
+                    }
+                } catch (err) {
+                    console.warn("Gagal memulihkan fullscreen:", err);
+                }
+            };
+            reenterFullScreen();
+        }
+
+        // Mengunci Sesi Siswa karena langgar toleransi
+        async function lockSiswaSession() {
+            removeSecurityListeners();
+            // Matikan fullscreen dengan penanganan error aman
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+
+            // Set di Firestore bahwa siswa ini terkunci (dengan menyetel isLoggedIn ke true / sesi terkunci)
+            // di sini kita tandai locked di database agar tidak bisa masuk lagi
+            if (activeSiswaData) {
+                try {
+                    const sDocRef = getPublicDocRef('siswa', activeSiswaData.id);
+                    // Gunakan properti tambahan "locked" atau biarkan isLoggedIn tetap true
+                    await updateDoc(sDocRef, { isLoggedIn: true, locked: true });
+                } catch (e) {
+                    console.error("Gagal mengunci di Firebase:", e);
+                }
+            }
+
+            clearInterval(examTimer);
+            
+            // Tampilkan Modal Terkunci
+            document.getElementById('locked-title').innerText = "UJIAN TERKUNCI!";
+            document.getElementById('locked-description').innerText = "Sesi Anda dinonaktifkan secara permanen karena melanggar aturan keluar fullscreen / pindah halaman browser sebanyak " + warningLimit + " kali.";
+            
+            closeModal('modal-warning');
+            closeModal('modal-selesai');
+            showModal('modal-locked');
+        }
+
+        // Timer Hitung Mundur Ujian
+        function startCountdownTimer(minutes) {
+            clearInterval(examTimer);
+            durationLeft = minutes * 60; // ubah ke detik
+
+            const timerContainer = document.getElementById('exam-countdown');
+            
+            function updateTimerDisplay() {
+                if (durationLeft <= 0) {
+                    clearInterval(examTimer);
+                    timerContainer.innerText = "00:00:00";
+                    forceEndExamTimeOut();
+                    return;
+                }
+
+                const hrs = Math.floor(durationLeft / 3600);
+                const mins = Math.floor((durationLeft % 3600) / 60);
+                const secs = durationLeft % 60;
+
+                timerContainer.innerText = 
+                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                // Beri warna merah jika waktu kurang dari 5 menit
+                if (durationLeft < 300) {
+                    timerContainer.className = "text-base font-black text-red-500 font-mono tracking-widest animate-pulse";
+                } else {
+                    timerContainer.className = "text-base font-black text-amber-400 font-mono tracking-widest";
+                }
+
+                durationLeft--;
+            }
+
+            updateTimerDisplay();
+            examTimer = setInterval(updateTimerDisplay, 1000);
+        }
+
+        // Konfirmasi Akhiri Ujian
+        window.confirmSubmitExam = function() {
+            showModal('modal-selesai');
+        }
+
+        // Eksekusi Submit Ujian Final (Sukses)
+        window.submitExamFinal = async function() {
+            clearInterval(examTimer);
+            removeSecurityListeners();
+            
+            // Matikan fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+
+            closeModal('modal-selesai');
+
+            // Tandai siswa selesai dengan mengosongkan status login agar database bersih
+            // atau tandai "selesai" agar tidak bisa masuk lagi
+            if (activeSiswaData) {
+                try {
+                    const sDocRef = getPublicDocRef('siswa', activeSiswaData.id);
+                    await updateDoc(sDocRef, { isLoggedIn: true, locked: true }); // Tetap bernilai true / dikunci agar tidak login berkali-kali
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // Tampilkan modal locked khusus pesan sukses
+            document.getElementById('locked-title').innerText = "TERIMA KASIH";
+            document.getElementById('locked-title').className = "text-2xl font-black text-emerald-600";
+            document.getElementById('locked-description').innerText = "Anda telah menyelesaikan pengerjaan ujian mata pelajaran: " + systemSettings.mapel + " dengan sukses dan aman.";
+            
+            showModal('locked-title'); // Gunakan showModal yang benar
+            showModal('modal-locked');
+        }
+
+        // Pemicu saat waktu habis otomatis
+        function forceEndExamTimeOut() {
+            showToast('Waktu pengerjaan ujian Anda telah habis!', 'warning');
+            submitExamFinal();
+        }
+
+
+        // ==========================================
+        // UTILITY FUNCTIONS & NAVIGATION
+        // ==========================================
+        
+        // Pindah Layar Halaman
+        function showPage(pageId) {
+            // Sembunyikan semua halaman
+            document.getElementById('page-login').classList.add('hidden');
+            document.getElementById('page-admin').classList.add('hidden');
+            document.getElementById('page-tata-tertib').classList.add('hidden');
+            document.getElementById('page-exam').classList.add('hidden');
+
+            // Tampilkan halaman target
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+        }
+
+        // Logout Sesi (Semua Role)
+        window.logout = async function() {
+            // Matikan fullscreen jika ada
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+
+            // Jika siswa logout biasa (belum terkunci), kosongkan status loginnya agar bisa login lagi
+            if (authRole === 'siswa' && activeSiswaData) {
+                const isLocked = document.getElementById('locked-title').innerText === "UJIAN TERKUNCI!" || document.getElementById('locked-title').innerText === "TERIMA KASIH";
+                
+                if (!isLocked) {
+                    try {
+                        const sDocRef = getPublicDocRef('siswa', activeSiswaData.id);
+                        await updateDoc(sDocRef, { isLoggedIn: false });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+
+            // Reset States
+            clearInterval(examTimer);
+            removeSecurityListeners();
+            authRole = null;
+            activeSiswaData = null;
+            warningCount = 0;
+
+            // Reset Iframe URL
+            document.getElementById('exam-iframe').src = "";
+
+            // Sembunyikan semua modal yang mungkin melayang
+            closeModal('modal-selesai');
+            closeModal('modal-warning');
+            closeModal('modal-locked');
+
+            showToast('Anda telah keluar dari sesi dengan aman.', 'success');
+            showPage('login');
+            setLoginTab('siswa');
+        }
+
+        // Custom Modal Show/Hide
+        window.showModal = function(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Sistem Notifikasi Toast Sederhana
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center space-x-3 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 max-w-sm `;
+
+            let icon = '';
+            if (type === 'success') {
+                toast.className += 'bg-emerald-50 border-emerald-200 text-emerald-800';
+                icon = '<i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>';
+            } else if (type === 'error') {
+                toast.className += 'bg-red-50 border-red-200 text-red-800';
+                icon = '<i class="fa-solid fa-triangle-exclamation text-red-600 text-base"></i>';
+            } else if (type === 'warning') {
+                toast.className += 'bg-amber-50 border-amber-200 text-amber-800';
+                icon = '<i class="fa-solid fa-circle-exclamation text-amber-600 text-base"></i>';
+            } else {
+                toast.className += 'bg-slate-50 border-slate-200 text-slate-800';
+                icon = '<i class="fa-solid fa-circle-info text-slate-600 text-base"></i>';
+            }
+
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            container.appendChild(toast);
+
+            // Trigger Animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Hapus otomatis dalam 4 detik
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'scale-90');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Escape string HTML injection
+        function escapeHtml(text) {
+            if (!text) return "";
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
